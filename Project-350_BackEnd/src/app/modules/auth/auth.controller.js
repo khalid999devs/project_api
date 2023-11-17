@@ -29,18 +29,23 @@ const loginUser = catchAsync(async (req, res) => {
 
 const getPatient = catchAsync(async (req, res) => {
   const user = req.verifiedUser;
-  console.log(req.verifiedUser);
-  if (user.role === 'Patient')
+  const query = 'SELECT DateOfBirth,PhoneNumber FROM Patients WHERE Email = ?';
+  const values = [user.Email];
+
+  const [expert] = (await pool.promise().query(query, values))[0];
+
+  if (expert)
     sendResponse(res, {
       statusCode: 200,
       success: true,
-      data: user,
+      message: 'success',
+      data: { ...user, ...expert },
     });
   else
     sendResponse(res, {
       statusCode: 401,
       success: false,
-      msg: 'Please login to your account as a  patient',
+      message: 'Wrong credentials. Please login to your account',
     });
 });
 

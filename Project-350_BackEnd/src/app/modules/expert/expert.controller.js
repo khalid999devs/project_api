@@ -1,3 +1,4 @@
+const pool = require('../../../pool');
 const catchAsync = require('../../../shared/catchAsync');
 const sendResponse = require('../../../shared/sendResponse');
 const { attachTokenToResponse } = require('../../../utils/attachToken');
@@ -32,18 +33,25 @@ const loginExpert = catchAsync(async (req, res) => {
 
 const getExpert = catchAsync(async (req, res) => {
   const user = req.verifiedUser;
-  console.log(req.verifiedUser);
-  if (user.role === 'Doctor')
+
+  const query =
+    'SELECT Specialization,PhoneNumber,BMDC_reg FROM Doctors WHERE Email = ?';
+  const values = [user.Email];
+
+  const [expert] = (await pool.promise().query(query, values))[0];
+
+  if (expert)
     sendResponse(res, {
       statusCode: 200,
       success: true,
-      data: user,
+      message: 'success',
+      data: { ...user, ...expert },
     });
   else
     sendResponse(res, {
       statusCode: 401,
       success: false,
-      msg: 'Please login to your account as an Expert',
+      message: 'Wrong credentials. Please login to your account',
     });
 });
 

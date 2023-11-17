@@ -103,14 +103,15 @@ const doctorSignIn = (event) => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(loginData),
   })
     .then((response) => response.json())
     .then((data) => {
       if (data?.success) {
         // console.log(payload);
-        window.location.href =
-          'http://127.0.0.1:5500/public/html/doctor_portal.html';
+        console.log(data);
+        // window.location.href = 'doctor_portal.html';
       }
     })
     .catch((error) => {
