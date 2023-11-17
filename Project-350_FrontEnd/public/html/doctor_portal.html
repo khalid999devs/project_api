@@ -1,160 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Doctor Dashboard</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/utilities.css">
-    <link rel="stylesheet" href="../css/dashboard_style.css">
-</head>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/utilities.css" />
+    <link rel="stylesheet" href="../css/dashboard_style.css" />
+  </head>
 
-<body>
+  <body>
+    <div style="margin-top: 100px; text-align: center">
+      <h1>Dr. Dhruba Siddique</h1>
+      <h2>Dental Medicine</h2>
 
-    <div style="margin-top: 100px; text-align: center;">
-        <h1>Dr. Dhruba Siddique</h1>
-        <h2>Dental Medicine</h2>
-
-        <div style="text-align: center; width: 200px; margin:auto; margin-top: 50px; ">
-            <h2>Provide slots</h2>
-            <input type="time" id="time-input" placeholder="HH:MM AM/PM">
-            <button onclick="addTimeToList()">Add Time</button>
-            <ul id="time-list"></ul>
-
-        </div>
+      <div
+        style="text-align: center; width: 200px; margin: auto; margin-top: 50px"
+      >
+        <h2>Provide slots</h2>
+        <input type="time" id="time-input" placeholder="HH:MM AM/PM" />
+        <button onclick="addTimeToList()">Add Time</button>
+        <ul id="time-list"></ul>
+      </div>
     </div>
-
-
-
-
 
     <table>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-            }
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+        }
 
-            table {
-                border-collapse: collapse;
-                width: 30%;
-                margin: 0 auto;
-                margin-top: 50px;
-                text-align: center;
-            }
+        table {
+          border-collapse: collapse;
+          width: 30%;
+          margin: 0 auto;
+          margin-top: 50px;
+          text-align: center;
+        }
 
-            th,
-            td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: left;
-            }
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+        }
 
-            th {
-                background-color: #4c87af;
-                color: white;
-            }
+        th {
+          background-color: #4c87af;
+          color: white;
+        }
 
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-        </style>
-        <caption>
-            <h1>Today's Appointment</h1>
-        </caption>
-        <thead>
-            <tr>
-                <th>TimeSlot</th>
-                <th>PatientName</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>10:00</td>
-                <td>John Doe</td>
-                <td>Confirmed</td>
-            </tr>
-            <tr>
-                <td>11:00</td>
-                <td>Jane Doe</td>
-                <td>Waiting</td>
-            </tr>
-        </tbody>
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+      </style>
+      <caption>
+        <h1>Today's Appointment</h1>
+      </caption>
+      <thead>
+        <tr>
+          <th>TimeSlot</th>
+          <th>PatientName</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>10:00</td>
+          <td>John Doe</td>
+          <td>Confirmed</td>
+        </tr>
+        <tr>
+          <td>11:00</td>
+          <td>Jane Doe</td>
+          <td>Waiting</td>
+        </tr>
+      </tbody>
     </table>
 
+    <div style="margin-top: 200px; text-align: center">
+      <ol style="--length: 4" role="list">
+        <!-- Today's Appointments -->
 
+        <section id="logout">
+          <button id="logout-button">Logout</button>
+        </section>
 
-    <div style="margin-top: 200px; text-align: center;">
-        <ol style="--length: 4" role="list">
-            <!-- Today's Appointments -->
-
-
-
-            <section id="logout">
-                <button id="logout-button">Logout</button>
-            </section>
-
-
-
-            <!-- Other Sections... -->
-            <!-- Add other sections as per your requirements -->
-        </ol>
+        <!-- Other Sections... -->
+        <!-- Add other sections as per your requirements -->
+      </ol>
     </div>
 
-
-
     <script>
+      function addTimeToList() {
+        let timeInput = document.getElementById('time-input');
+        let timeList = document.getElementById('time-list');
 
-        function addTimeToList() {
-            let timeInput = document.getElementById('time-input');
-            let timeList = document.getElementById('time-list');
+        let listItem = document.createElement('li');
+        listItem.textContent = timeInput.value;
+        timeList.appendChild(listItem);
+      }
 
-            let listItem = document.createElement('li');
-            listItem.textContent = timeInput.value;
-            timeList.appendChild(listItem);
-        }
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const logoutButton = document.getElementById('logout-button');
-            logoutButton.addEventListener('click', function () {
-                window.location.href = 'http://127.0.0.1:5500/public/html/home.html';
-            });
+      document.addEventListener('DOMContentLoaded', function () {
+        const logoutButton = document.getElementById('logout-button');
+        logoutButton.addEventListener('click', function () {
+          window.location.href = 'home.html';
         });
-        document.addEventListener('DOMContentLoaded', function () {
-            fetchAppointments('todays-appointments', '/api/appointments/today');
-            fetchAppointments('pending-appointments', '/api/appointments/pending');
-            fetchEmergencyAvailability();
-        });
+      });
 
-        async function fetchAppointments(elementId, apiEndpoint) {
-            try {
-                const response = await fetch(apiEndpoint);
-                const appointments = await response.json();
+      document.addEventListener('DOMContentLoaded', function () {
+        fetchAppointments('todays-appointments', '/api/appointments/today');
+        fetchAppointments('pending-appointments', '/api/appointments/pending');
+        fetchEmergencyAvailability();
+      });
 
-                const ul = document.getElementById(elementId);
-                appointments.forEach(appointment => {
-                    const li = document.createElement('li');
-                    li.textContent = `Appointment with ${appointment.patientName} at ${appointment.time}`;
-                    ul.appendChild(li);
-                });
-            } catch (error) {
-                console.error('Error fetching appointments:', error);
-            }
+      async function fetchAppointments(elementId, apiEndpoint) {
+        try {
+          const response = await fetch(apiEndpoint);
+          const appointments = await response.json();
+
+          const ul = document.getElementById(elementId);
+          appointments.forEach((appointment) => {
+            const li = document.createElement('li');
+            li.textContent = `Appointment with ${appointment.patientName} at ${appointment.time}`;
+            ul.appendChild(li);
+          });
+        } catch (error) {
+          console.error('Error fetching appointments:', error);
         }
+      }
 
-        async function fetchEmergencyAvailability() {
-            try {
-                const response = await fetch('/api/doctor/emergency-availability');
-                const { isAvailable } = await response.json();
+      async function fetchEmergencyAvailability() {
+        try {
+          const response = await fetch('/api/doctor/emergency-availability');
+          const { isAvailable } = await response.json();
 
-                const p = document.getElementById('emergency-availability');
-                p.textContent = isAvailable ? 'Available for emergencies' : 'Not available for emergencies';
-            } catch (error) {
-                console.error('Error fetching emergency availability:', error);
-            }
+          const p = document.getElementById('emergency-availability');
+          p.textContent = isAvailable
+            ? 'Available for emergencies'
+            : 'Not available for emergencies';
+        } catch (error) {
+          console.error('Error fetching emergency availability:', error);
         }
+      }
     </script>
-</body>
-
+  </body>
 </html>
