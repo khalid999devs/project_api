@@ -18,7 +18,6 @@ const createExpert = catchAsync(async (req, res) => {
 
 const loginExpert = catchAsync(async (req, res) => {
   const loginDAta = req.body;
-  console.log(loginDAta);
 
   const result = await expertService.loginExpert(loginDAta);
   const token = result.accessToken;
@@ -31,9 +30,27 @@ const loginExpert = catchAsync(async (req, res) => {
   });
 });
 
+const getExpert = catchAsync(async (req, res) => {
+  const user = req.verifiedUser;
+  console.log(req.verifiedUser);
+  if (user.role === 'Doctor')
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      data: user,
+    });
+  else
+    sendResponse(res, {
+      statusCode: 401,
+      success: false,
+      msg: 'Please login to your account as an Expert',
+    });
+});
+
 const expertController = {
   createExpert,
   loginExpert,
+  getExpert,
 };
 
 module.exports = expertController;

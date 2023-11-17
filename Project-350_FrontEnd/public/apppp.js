@@ -184,7 +184,7 @@ function IsvalidEmail(emaill) {
   return regex.test(emaill);
 }
 
-document.getElementById('signnup').addEventListener('click', function () {
+document.getElementById('signnup').addEventListener('click', function (event) {
   var emaill = document.getElementById('patientLogInmail').value;
   if (IsvalidEmail(emaill)) {
     console.log('Email is valid.');
