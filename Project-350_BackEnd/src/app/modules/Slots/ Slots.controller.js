@@ -1,7 +1,7 @@
-const catchAsync = require("../../../shared/catchAsync");
-const sendResponse = require("../../../shared/sendResponse");
-const { use } = require("./Slots.route");
-const authService = require("./Slots.service");
+const catchAsync = require('../../../shared/catchAsync');
+const sendResponse = require('../../../shared/sendResponse');
+const { use } = require('./Slots.route');
+const authService = require('./Slots.service');
 
 const createSlots = catchAsync(async (req, res) => {
   const slotsData = req.body;
@@ -12,7 +12,7 @@ const createSlots = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Slot created successfully",
+    message: 'Slot created successfully',
     data: result,
   });
 });
@@ -26,14 +26,26 @@ const getAllSlots = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     message: `${
-      result.length < 1 ? "No slots found." : "Slots retrieved successfully."
+      result.length < 1 ? 'No slots found.' : 'Slots retrieved successfully.'
     }`,
     data: result,
   });
 });
 
+const deleteSlot = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const metaData = await authService.deleteSlotServ(id);
+  console.log(metaData);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: `deleted`,
+  });
+});
+
 const SlotsController = {
   createSlots,
+  deleteSlot,
   getAllSlots,
 };
 

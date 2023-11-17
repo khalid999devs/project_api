@@ -1,16 +1,16 @@
-const pool = require("../../../pool");
-const userRoleEnum = require("../../../shared/enums");
+const pool = require('../../../pool');
+const userRoleEnum = require('../../../shared/enums');
 
 const createSlotsInDB = async (payload, docID) => {
   const { starting_time } = payload;
 
   const query =
-    "INSERT INTO availableSlots (docID, starting_time) VALUES (?, ?)";
+    'INSERT INTO availableSlots (docID, starting_time) VALUES (?, ?)';
   const values = [docID, starting_time];
 
   const [createdSlots] = await pool.promise().query(query, values);
 
-  const selectQuery = "SELECT * FROM availableSlots WHERE slotID = ?";
+  const selectQuery = 'SELECT * FROM availableSlots WHERE slotID = ?';
 
   const selectValues = [createdSlots?.insertId];
 
@@ -37,7 +37,7 @@ const getAllSlotsFromDB = async (user) => {
   
     FROM availableSlots
     JOIN Doctors ON availableSlots.docID = Doctors.BMDC_reg
-    ${user.role === userRoleEnum.Doctor ? "WHERE availableSlots.docID = ?" : ""}
+    ${user.role === userRoleEnum.Doctor ? 'WHERE availableSlots.docID = ?' : ''}
     `;
 
   [slot] = await pool
@@ -49,9 +49,19 @@ const getAllSlotsFromDB = async (user) => {
   return slot;
 };
 
+const deleteSlotServ = async (id) => {
+  const query = 'delete from availableSlots where SlotID=?';
+  const values = [id];
+
+  const [result] = await pool.promise().query(query, values);
+
+  return result;
+};
+
 const SlotsService = {
   createSlotsInDB,
   getAllSlotsFromDB,
+  deleteSlotServ,
 };
 
 module.exports = SlotsService;

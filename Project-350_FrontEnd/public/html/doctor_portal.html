@@ -48,7 +48,7 @@
         <h2>Provide slots</h2>
         <input type="time" id="time-input" placeholder="HH:MM AM/PM" />
         <button onclick="addTimeToList()">Add Time</button>
-        <ul id="2"></ul>
+        <ul id="time-list"></ul>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
           <th>Status</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="appointments">
         <tr>
           <td>10:00</td>
           <td>John Doe</td>
@@ -96,36 +96,106 @@
       const contentContainer = document.getElementById('doctorContents');
       const docName = document.getElementById('docName');
       const specialization = document.getElementById('specialization');
+      let timeInput = document.getElementById('time-input');
+      let timeList = document.getElementById('time-list');
 
-      function addTimeToList() {
-        let timeInput = document.getElementById('time-input');
-        let timeList = document.getElementById('time-list');
+      async function addTimeToList() {
+        if (!timeInput.value) {
+          alert('Please Enter a time first');
+          return;
+        }
 
-        let listItem = document.createElement('li');
-        listItem.id = timeInput;
+        try {
+          const resp = await fetch('http://localhost:8000/api/v1/slots', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ starting_time: timeInput.value }),
+          });
+          const result = await resp.json();
+          // console.log(result);
+          if (result.success) {
+            let listItem = document.createElement('li');
+            listItem.id = result.data.SlotID;
 
-        // listItem.textContent = timeInput.value;
-        listItem.innerHTML = `
+            // listItem.textContent = timeInput.value;
+            listItem.innerHTML = `
         <div>
           <p>${timeInput.value}</p>
           <span class="deleteTime">x<span>
           </div>
         `;
-        timeList.appendChild(listItem);
+            timeList.appendChild(listItem);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      async function getTimeSlots() {
+        fetch('http://localhost:8000/api/v1/slots', {
+          method: 'GET',
+          credentials: 'include',
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              // console.log(data);
+
+              timeList.innerHTML = `
+                ${data.data
+                  .map((item, value) => {
+                    return `<li id="${item.SlotID}"><div>
+          <p>${item.starting_time}</p>
+          <span class="deleteTime">x<span>
+          </div></li>`;
+                  })
+                  .join(' ')}
+              `;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
 
       document.addEventListener('DOMContentLoaded', function () {
         const logoutButton = document.getElementById('logout-button');
-
         logoutButton.addEventListener('click', function () {
           logout('http://localhost:8000/api/v1/expert/logout');
         });
       });
 
+      document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('deleteTime')) {
+          const id = e.target.parentElement.parentElement.id;
+          // console.log(e.target.parentElement.parentElement.id);
+
+          try {
+            const resp = await fetch(
+              `http://localhost:8000/api/v1/slots/${id}`,
+              {
+                method: 'PUT',
+                credentials: 'include',
+              }
+            );
+            const result = await resp.json();
+            if (result.success) {
+              getTimeSlots();
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      });
+
       document.addEventListener('DOMContentLoaded', async function () {
         await getDoctor();
-        fetchAppointments('todays-appointments', '/api/appointments/today');
-        fetchAppointments('pending-appointments', '/api/appointments/pending');
+        await getTimeSlots();
+
+        fetchAppointments();
         fetchEmergencyAvailability();
       });
 
@@ -154,19 +224,29 @@
         }
       }
 
-      async function fetchAppointments(elementId, apiEndpoint) {
+      async function fetchAppointments() {
         try {
-          const response = await fetch(apiEndpoint);
-          const appointments = await response.json();
-
-          const ul = document.getElementById(elementId);
-          appointments.forEach((appointment) => {
-            const li = document.createElement('li');
-            li.textContent = `Appointment with ${appointment.patientName} at ${appointment.time}`;
-            ul.appendChild(li);
+          const resp = await fetch('http://localhost:8000/api/v1/bookings', {
+            method: 'GET',
+            credentials: 'include',
           });
+          const result = await resp.json();
+          console.log(result);
+          if (result.success) {
+            document.getElementById('appointments').innerHTML = `
+          ${result.data
+            .map((item, value) => {
+              return `   <tr id="${item.BookID}">
+          <td>${item.starting_time}</td>
+          <td>${item.FirstName} ${item.LastName}</td>
+          <td>${item.STATUS}</td>
+        </tr>`;
+            })
+            .join(' ')}
+          `;
+          }
         } catch (error) {
-          console.error('Error fetching appointments:', error);
+          console.log(error);
         }
       }
 

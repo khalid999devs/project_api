@@ -67,7 +67,7 @@ const patientSignUp = (event) => {
     DateOfBirth,
     Password,
   };
-  // console.log(SignUpData);
+  console.log(SignUpData);
 
   fetch('http://localhost:8000/api/v1/auth/signup', {
     method: 'POST',
@@ -79,8 +79,7 @@ const patientSignUp = (event) => {
     .then((response) => response.json())
     .then((data) => {
       if (data?.success) {
-        window.location.href = 'patient_portal.html';
-        //console.log("success");
+        window.location.href = 'patient_register.html';
       }
     })
     .catch((error) => {
@@ -113,8 +112,9 @@ const doctorSignIn = (event) => {
       }
     })
     .catch((error) => {
-      console.error('Error:', error);
       alert('An error occurred during login. Please try again.');
+
+      console.error('Error:', error);
     });
   //console.log(payload);
 };
@@ -148,7 +148,7 @@ const doctorSignUp = (event) => {
     .then((data) => {
       console.log(data);
       if (data?.success) {
-        window.location.href = 'doctor_portal.html';
+        window.location.href = 'doctor_register.html';
       }
     })
     .catch((error) => {
@@ -183,9 +183,9 @@ function IsvalidEmail(emaill) {
   return regex.test(emaill);
 }
 
-document.getElementById('signnup').addEventListener('click', function (event) {
+function patientVerifySignUp(event) {
   var emaill = document.getElementById('patientLogInmail').value;
-  if (IsvalidEmail(emaill)) {
+  if (validateEmail(emaill)) {
     console.log('Email is valid.');
     patientSignUp(event);
     // Your signup code goes here
@@ -193,7 +193,7 @@ document.getElementById('signnup').addEventListener('click', function (event) {
     console.log('Email is invalid.');
     alert('Your email is invalid');
   }
-});
+}
 
 function logout(url) {
   console.log(url);
