@@ -30,6 +30,7 @@ const patientSignIn = (event) => {
 
   fetch('http://localhost:8000/api/v1/auth/login', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -38,9 +39,8 @@ const patientSignIn = (event) => {
     .then((response) => response.json())
     .then((data) => {
       if (data?.success) {
-        window.location.href =
-          'http://127.0.0.1:5500/public/html/patient_portal.html';
-
+        console.log(data);
+        window.location.href = 'patient_portal.html';
         // console.log(data);
       }
     })
@@ -79,8 +79,7 @@ const patientSignUp = (event) => {
     .then((response) => response.json())
     .then((data) => {
       if (data?.success) {
-        window.location.href =
-          'http://127.0.0.1:5500/public/html/patient_portal.html';
+        window.location.href = 'patient_portal.html';
         //console.log("success");
       }
     })
@@ -96,22 +95,21 @@ const doctorSignIn = (event) => {
   const Password = document.getElementById('DoctorLogInPass').value;
 
   const loginData = { Email, Password };
-  console.log(loginData);
 
   fetch('http://localhost:8000/api/v1/expert/login', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
     body: JSON.stringify(loginData),
   })
     .then((response) => response.json())
     .then((data) => {
       if (data?.success) {
         // console.log(payload);
-        console.log(data);
-        // window.location.href = 'doctor_portal.html';
+
+        window.location.href = 'doctor_portal.html';
       }
     })
     .catch((error) => {
@@ -196,3 +194,23 @@ document.getElementById('signnup').addEventListener('click', function (event) {
     alert('Your email is invalid');
   }
 });
+
+function logout(url) {
+  console.log(url);
+  fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data?.success) {
+        // console.log(payload);
+        console.log(data);
+        window.location.href = 'home.html';
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('An error occurred during login. Please try again.');
+    });
+}

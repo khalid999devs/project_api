@@ -23,8 +23,7 @@ const loginExpert = catchAsync(async (req, res) => {
   const result = await expertService.loginExpert(loginDAta);
   const token = result.accessToken;
   attachTokenToResponse('token', { res, token, expiresInDay: 365 });
-
-  sendResponse(res, {
+  res.json({
     statusCode: 200,
     success: true,
     message: 'Login successful',
@@ -35,7 +34,7 @@ const getExpert = catchAsync(async (req, res) => {
   const user = req.verifiedUser;
 
   const query =
-    'SELECT Specialization,PhoneNumber,BMDC_reg FROM Doctors WHERE Email = ?';
+    'SELECT FullName,Specialization,PhoneNumber,BMDC_reg FROM Doctors WHERE Email = ?';
   const values = [user.Email];
 
   const [expert] = (await pool.promise().query(query, values))[0];

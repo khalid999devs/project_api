@@ -6,12 +6,41 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/utilities.css" />
     <link rel="stylesheet" href="../css/dashboard_style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 30%;
+        margin: 0 auto;
+        margin-top: 50px;
+        text-align: center;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #4c87af;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    </style>
   </head>
 
   <body>
-    <div style="margin-top: 100px; text-align: center">
-      <h1>Dr. Dhruba Siddique</h1>
-      <h2>Dental Medicine</h2>
+    <div id="doctorContents" style="margin-top: 100px; text-align: center">
+      <h1 id="docName">Dr. Dhruba Siddique</h1>
+      <h2 id="specialization">Dental Medicine</h2>
 
       <div
         style="text-align: center; width: 200px; margin: auto; margin-top: 50px"
@@ -19,40 +48,11 @@
         <h2>Provide slots</h2>
         <input type="time" id="time-input" placeholder="HH:MM AM/PM" />
         <button onclick="addTimeToList()">Add Time</button>
-        <ul id="time-list"></ul>
+        <ul id="2"></ul>
       </div>
     </div>
 
     <table>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-        }
-
-        table {
-          border-collapse: collapse;
-          width: 30%;
-          margin: 0 auto;
-          margin-top: 50px;
-          text-align: center;
-        }
-
-        th,
-        td {
-          border: 1px solid #ddd;
-          padding: 8px;
-          text-align: left;
-        }
-
-        th {
-          background-color: #4c87af;
-          color: white;
-        }
-
-        tr:nth-child(even) {
-          background-color: #f2f2f2;
-        }
-      </style>
       <caption>
         <h1>Today's Appointment</h1>
       </caption>
@@ -90,28 +90,69 @@
       </ol>
     </div>
 
+    <script src="../apppp.js"></script>
     <script>
+      let doctorData;
+      const contentContainer = document.getElementById('doctorContents');
+      const docName = document.getElementById('docName');
+      const specialization = document.getElementById('specialization');
+
       function addTimeToList() {
         let timeInput = document.getElementById('time-input');
         let timeList = document.getElementById('time-list');
 
         let listItem = document.createElement('li');
-        listItem.textContent = timeInput.value;
+        listItem.id = timeInput;
+
+        // listItem.textContent = timeInput.value;
+        listItem.innerHTML = `
+        <div>
+          <p>${timeInput.value}</p>
+          <span class="deleteTime">x<span>
+          </div>
+        `;
         timeList.appendChild(listItem);
       }
 
       document.addEventListener('DOMContentLoaded', function () {
         const logoutButton = document.getElementById('logout-button');
+
         logoutButton.addEventListener('click', function () {
-          window.location.href = 'home.html';
+          logout('http://localhost:8000/api/v1/expert/logout');
         });
       });
 
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', async function () {
+        await getDoctor();
         fetchAppointments('todays-appointments', '/api/appointments/today');
         fetchAppointments('pending-appointments', '/api/appointments/pending');
         fetchEmergencyAvailability();
       });
+
+      async function getDoctor() {
+        try {
+          const resp = await fetch(
+            'http://localhost:8000/api/v1/expert/getExpert',
+            {
+              method: 'GET',
+              credentials: 'include',
+            }
+          );
+          const result = await resp.json();
+          if (!result.success) {
+            alert('Please Login to your account first');
+            window.location.href = 'doctor_register.html';
+            return;
+          }
+          doctorData = result.data;
+
+          console.log(doctorData);
+          docName.textContent = doctorData.FullName;
+          specialization.textContent = doctorData.Specialization;
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
       async function fetchAppointments(elementId, apiEndpoint) {
         try {
