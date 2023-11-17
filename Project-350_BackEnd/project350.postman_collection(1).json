@@ -1,0 +1,375 @@
+{
+	"info": {
+		"_postman_id": "3ab8827c-ec1d-4c01-be72-cba8ad2d6b17",
+		"name": "project35",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23472169"
+	},
+	"item": [
+		{
+			"name": "patients",
+			"item": [
+				{
+					"name": "create patients",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//     \"Email\": \"patient1@example.com\",\r\n//     \"FirstName\": \"John\",\r\n//     \"LastName\": \"Doe\",\r\n//     \"DateOfBirth\": \"1990-05-15\",\r\n//     \"PhoneNumber\": \"555-555-5555\",\r\n//     \"Password\": \"password123\"\r\n// }\r\n{\r\n    \"Password\": \"securepass\",\r\n    \"Email\": \"patient2@example.com\",\r\n    \"FirstName\": \"Alice\",\r\n    \"LastName\": \"Smith\",\r\n    \"DateOfBirth\": \"1985-12-10\",\r\n    \"PhoneNumber\": \"123-456-7890\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/signup",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//     \"Email\": \"patient1@example.com\",\r\n//     \"Password\": \"password123\"\r\n// }\r\n{\r\n    \"Password\": \"securepass\",\r\n    \"Email\": \"patient2@example.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Doctors",
+			"item": [
+				{
+					"name": "create doctors",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/expert/signup",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"expert",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//     \"Email\":\"saho@hell.com\",\r\n//     \"Password\":\"asdf\"\r\n// }\r\n{\r\n    \"Email\":\"tonmoy@fuck.com\",\r\n    \"Password\":\"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/expert/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"expert",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Slots",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"starting_time\": \"2023-11-10T08:00:00\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/slots",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"slots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{USER}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT2}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/slots",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"slots"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "booking",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{USER}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{USER2}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"slotID\": \"6\",\n    \"bookingDate\":\"2023-11-10T08:00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/bookings",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{USER}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{USER2}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT2}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/bookings",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update booking",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{USER}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{USER2}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{EXPERT2}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/bookings/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"bookings",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "EXPERT",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJCTURDX3JlZyI6IkJEMTIyNDMiLCJFbWFpbCI6InNhaG9AaGVsbC5jb20iLCJyb2xlIjoiRG9jdG9yIiwiaWF0IjoxNzAwMDM2MzAzLCJleHAiOjE3MzE1NzIzMDN9.93CLIlo5w1gv-R8y0oE5U9Kw0nX5ZG1e2-gUC4QfmoI",
+			"type": "string"
+		},
+		{
+			"key": "USER",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjEsIkVtYWlsIjoicGF0aWVudDFAZXhhbXBsZS5jb20iLCJyb2xlIjoiUGF0aWVudCIsImlhdCI6MTcwMDAzNjQyNywiZXhwIjoxNzMxNTcyNDI3fQ.6ksW-lzkwIctRQ2QWLpmr5TkMZga3Djei7bR3QRXr80",
+			"type": "string"
+		},
+		{
+			"key": "USER2",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjMsIkVtYWlsIjoicGF0aWVudDJAZXhhbXBsZS5jb20iLCJyb2xlIjoiUGF0aWVudCIsImlhdCI6MTcwMDA0ODcxOSwiZXhwIjoxNzMxNTg0NzE5fQ.kjCzSx1uVsxNYhFs3H953b-fgSZwIYshMCTzBbBvevE",
+			"type": "string"
+		},
+		{
+			"key": "EXPERT2",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJCTURDX3JlZyI6IkJEMTIyNDgzIiwiRW1haWwiOiJ0b25tb3lAZnVjay5jb20iLCJyb2xlIjoiRG9jdG9yIiwiaWF0IjoxNzAwMDQ4OTYwLCJleHAiOjE3MzE1ODQ5NjB9.MmDSlQ17dZdFfeZVL3KafdV2Pq4pe7mPBeTScMqFMLs",
+			"type": "string"
+		}
+	]
+}
