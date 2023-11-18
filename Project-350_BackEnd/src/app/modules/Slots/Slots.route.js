@@ -16,10 +16,18 @@ router.get(
   SlotsController.getAllSlots
 );
 
+router.get('/prescription/:id', SlotsController.getAllPrescriptions);
+
 router.put(
   '/:id',
   verifyAuthToken(userRoleEnum.Doctor),
   SlotsController.deleteSlot
+);
+
+router.post(
+  '/prescription',
+  verifyAuthToken(userRoleEnum.Doctor),
+  SlotsController.prescribe
 );
 
 const SlotsRoutes = router;

@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/utilities.css" />
     <link rel="stylesheet" href="../css/dashboard_style.css" />
+    <link rel="stylesheet" href="../css/prescription.css" />
+    <link rel="stylesheet" href="../css/formstyle.css" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -61,20 +63,10 @@
           <th>TimeSlot</th>
           <th>PatientName</th>
           <th>Status</th>
+          <th>Prescribe</th>
         </tr>
       </thead>
-      <tbody id="appointments">
-        <tr>
-          <td>10:00</td>
-          <td>John Doe</td>
-          <td>Confirmed</td>
-        </tr>
-        <tr>
-          <td>11:00</td>
-          <td>Jane Doe</td>
-          <td>Waiting</td>
-        </tr>
-      </tbody>
+      <tbody id="appointments"></tbody>
     </table>
 
     <div style="margin-top: 200px; text-align: center">
@@ -89,6 +81,41 @@
         <!-- Add other sections as per your requirements -->
       </ol>
     </div>
+
+    <form id="prescription" onsubmit="handlePresSub(event)">
+      <div class="actionContainer">
+        <span id="closePop" onclick="closePopUp()">x</span>
+      </div>
+      <div class="pres-container">
+        <div>
+          <input
+            type="text"
+            placeholder="Medicine"
+            name="medicine"
+            id="medicine"
+          />
+        </div>
+        <div>
+          <input type="text" placeholder="Rx" name="rx" id="rx" />
+        </div>
+        <div>
+          <input type="text" placeholder="CC" name="cc" id="cc" />
+        </div>
+
+        <div>
+          <textarea
+            placeholder="Treatment_Plan"
+            name="treatment"
+            id="treatment"
+          ></textarea>
+        </div>
+        <div>
+          <input type="text" placeholder="O_E" name="oe" id="oe" />
+        </div>
+
+        <button type="Submit">Submit</button>
+      </div>
+    </form>
 
     <script src="../apppp.js"></script>
     <script>
@@ -240,6 +267,7 @@
           <td>${item.starting_time}</td>
           <td>${item.FirstName} ${item.LastName}</td>
           <td>${item.STATUS}</td>
+          <td style="color:blue;cursor:pointer" onClick="openPopUp(event)">Prescribe</td>
         </tr>`;
             })
             .join(' ')}
@@ -261,6 +289,63 @@
             : 'Not available for emergencies';
         } catch (error) {
           console.error('Error fetching emergency availability:', error);
+        }
+      }
+
+      let prescriptionData = {
+        patientId: -1,
+      };
+      const prescription = document.getElementById('prescription');
+      const medicine = document.getElementById('medicine');
+      const rx = document.getElementById('rx');
+      const cc = document.getElementById('cc');
+      const treatment = document.getElementById('treatment');
+      const oe = document.getElementById('oe');
+
+      function openPopUp(event) {
+        prescription.style.display = 'block';
+        prescriptionData.patientId = event.target.parentElement.id;
+        console.log(prescriptionData);
+      }
+      function closePopUp() {
+        prescription.style.display = 'none';
+      }
+
+      async function handlePresSub(event) {
+        event.preventDefault();
+        const data = {
+          PatientID: prescriptionData.patientId,
+          Medicine: medicine.value,
+          Rx: rx.value,
+          CC: cc.value,
+          Treatment_Plan: treatment.value,
+          O_E: oe.value,
+          docName: doctorData.FullName,
+          DocID: doctorData.BMDC_reg,
+        };
+
+        console.log(data);
+        try {
+          const resp = await fetch(
+            'http://localhost:8000/api/v1/slots/prescription',
+            {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ...data }),
+            }
+          );
+          const result = await resp.json();
+          // console.log(result);
+          if (result.success) {
+            console.log(result);
+            closePopUp();
+          }
+        } catch (error) {
+          closePopUp();
+          console.log(error);
         }
       }
     </script>

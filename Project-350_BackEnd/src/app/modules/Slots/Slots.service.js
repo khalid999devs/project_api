@@ -58,10 +58,32 @@ const deleteSlotServ = async (id) => {
   return result;
 };
 
+const prescription = async (data) => {
+  const { PatientID, Medicine, Rx, CC, Treatment_Plan, O_E, docName, DocID } =
+    data;
+  const query =
+    'INSERT INTO prescription (PatientID, DocID, Date, Medicine,RX,CC,Treatment_Plan,O_E,docName) VALUES (?,?,?,?,?,?,?,?,?);';
+  const values = [
+    PatientID,
+    DocID,
+    new Date().toISOString().slice(0, 10),
+    Medicine,
+    Rx,
+    CC,
+    Treatment_Plan,
+    O_E,
+    docName,
+  ];
+
+  const [createdSlots] = await pool.promise().query(query, values);
+  return createdSlots;
+};
+
 const SlotsService = {
   createSlotsInDB,
   getAllSlotsFromDB,
   deleteSlotServ,
+  prescription,
 };
 
 module.exports = SlotsService;
