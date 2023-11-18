@@ -411,7 +411,7 @@
 
       async function confirmBooking(slotID) {
         let bookingDate = document.getElementById('bookingDate').value;
-        alert('Your appointment is booked for ' + bookingDate);
+
         document.getElementById('bookingBox').style.display = 'none';
         console.log({ bookingID, bookingDate });
         try {
@@ -427,9 +427,13 @@
           // console.log(result);
           if (result.success) {
             // console.log(result);
+            alert('Your appointment is booked for ' + bookingDate);
             await getAllBookings();
+          } else {
+            alert('This slot is already booked');
           }
         } catch (error) {
+          alert('some error happened');
           console.log(error);
         }
       }
